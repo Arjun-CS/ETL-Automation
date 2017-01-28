@@ -958,4 +958,83 @@ public class HomePage {
 			e.printStackTrace();
 		}  
     }
+    
+    public void testResultsDisplay()
+    {
+    	if(frame!=null)
+    		frame.setVisible(false);
+    	frame = new JFrame("QC and Automation Combined");
+	    /*    
+        topLeftPanel=new JPanel();
+	        topRightPanel=new JPanel();
+	        bottomLeftPanel=new JPanel();
+	        bottomRightPanel=new JPanel();
+	        frame.setLayout(new FlowLayout());
+	        */
+        frame.setLayout(new GridLayout());
+        frame.pack();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        File testSuiteFileRoot = new File(".\\TestSuite");
+        //
+        File testResultsFileRoot=new File(".\\TestResults")   ;
+        
+        testSuiteRoot = new DefaultMutableTreeNode(new FileNode(testSuiteFileRoot));
+        
+        //
+        testResultsRoot=new DefaultMutableTreeNode(new FileNode(testResultsFileRoot));
+        
+        testSuiteTreeModel = new DefaultTreeModel(testSuiteRoot);
+        
+        //
+        testResultsTreeModel = new DefaultTreeModel(testResultsRoot);
+
+        testSuiteTree = new JTree(testSuiteTreeModel);
+        
+        //
+        testResultsTree = new JTree(testResultsTreeModel);
+        
+        testSuiteTree.setShowsRootHandles(true);
+        
+        //
+        testResultsTree.setShowsRootHandles(true);
+        
+        
+        JScrollPane scrollPane = new JScrollPane(testSuiteTree);
+        
+        //
+        JScrollPane testResultsScrollPane = new JScrollPane(testResultsTree);
+        
+        testSuiteTree.addTreeSelectionListener(new TreeNodeSelected());
+        
+        
+        testResultsTree.addTreeSelectionListener(new TreeNodeSelectedToDisplayResults());
+        //topLeftPanel.add(scrollPane);
+        frame.add(scrollPane);
+        
+        
+        //
+        frame.add(testResultsScrollPane);
+        
+        /*
+        frame.add(topLeftPanel);
+        frame.add(topRightPanel);
+        frame.add(bottomLeftPanel);
+        frame.add(bottomRightPanel);
+        */
+        frame.setLocationByPlatform(true);
+        frame.setSize(640, 480);
+        frame.setVisible(true);
+
+        CreateChildNodes ccn = 
+                new CreateChildNodes(testSuiteFileRoot, testSuiteRoot);
+        new Thread(ccn).start();
+        
+        CreateChildNodes ccn1 = 
+                new CreateChildNodes(testResultsFileRoot, testResultsRoot);
+        new Thread(ccn1).start();
+        
+        frame.add(queryBuilderButton);
+        queryBuilderButton.addActionListener(new OpenQueryBuilder());
+    }
 }
